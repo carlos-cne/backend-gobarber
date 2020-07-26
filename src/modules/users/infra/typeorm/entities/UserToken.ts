@@ -26,4 +26,4 @@ class UserToken {
   updated_at: Date;
 }
 
-export default User;
+export default UserToken;
