@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import '@shared/container';
 
 import express, { Request, NextFunction, Response } from 'express';
 import cors from 'cors';
@@ -9,7 +10,6 @@ import uploadConfig from '@config/upload';
 
 import '../typeorm';
 import AppError from '@shared/errors/AppError';
-import '@shared/container';
 
 const app = express();
 
