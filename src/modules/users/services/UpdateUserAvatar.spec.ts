@@ -4,14 +4,20 @@ import FakeStorageProvider from '@shared/container/providers/StorageProvider/Fak
 import UpdateUserAvatarService from './UpdateUserAvatarService';
 
 describe('Update User Avatar', () => {
-  it('should be able to update avatar', async () => {
-    const fakeStorageProvider = new FakeStorageProvider();
-    const fakeUsersRepository = new FakeUsersRepository();
-    const updateUserAvatarService = new UpdateUserAvatarService(
+  let fakeStorageProvider: FakeStorageProvider;
+  let fakeUsersRepository: FakeUsersRepository;
+  let updateUserAvatarService: UpdateUserAvatarService;
+
+  beforeEach(() => {
+    fakeStorageProvider = new FakeStorageProvider();
+    fakeUsersRepository = new FakeUsersRepository();
+    updateUserAvatarService = new UpdateUserAvatarService(
       fakeUsersRepository,
       fakeStorageProvider,
     );
+  });
 
+  it('should be able to update avatar', async () => {
     const user = await fakeUsersRepository.create({
       email: 'teste@123.com',
       name: 'unit test',
@@ -27,13 +33,6 @@ describe('Update User Avatar', () => {
   });
 
   it('should not be able to update avatar without an existent user', async () => {
-    const fakeStorageProvider = new FakeStorageProvider();
-    const fakeUsersRepository = new FakeUsersRepository();
-    const updateUserAvatarService = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
-
     await expect(
       updateUserAvatarService.execute({
         user_id: 'without-existent-id',
@@ -43,16 +42,7 @@ describe('Update User Avatar', () => {
   });
 
   it('should delete old avatar when update new avatar', async () => {
-    const fakeStorageProvider = new FakeStorageProvider();
-
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
-
-    const fakeUsersRepository = new FakeUsersRepository();
-    const updateUserAvatarService = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
-
     const user = await fakeUsersRepository.create({
       email: 'teste@123.com',
       name: 'unit test',
