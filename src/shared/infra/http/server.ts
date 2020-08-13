@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'dotenv/config';
 import { errors } from 'celebrate';
 import '@shared/container';
 
