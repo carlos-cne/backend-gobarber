@@ -3,6 +3,7 @@ import User from '../infra/typeorm/entities/User';
 import AppError from '@shared/errors/AppError';
 import IUserRepository from '../repositories/IUsersRepositories';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 
 interface Request {
   name: string;
@@ -10,7 +11,7 @@ interface Request {
   password: string;
 }
 
-injectable();
+@injectable()
 class CreateUserService {
   constructor(
     @inject('UsersRepository')
@@ -18,6 +19,9 @@ class CreateUserService {
 
     @inject('HashProvider')
     private hasProvider: IHashProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ name, email, password }: Request): Promise<User> {
@@ -34,6 +38,8 @@ class CreateUserService {
       email,
       password: hashedPassword,
     });
+
+    await this.cacheProvider.invalidatePrefix('providers-list');
 
     return user;
   }
