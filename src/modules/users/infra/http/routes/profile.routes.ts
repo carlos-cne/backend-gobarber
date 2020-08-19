@@ -16,15 +16,17 @@ profileRouter.put(
     [Segments.BODY]: {
       name: Joi.string().required(),
       email: Joi.string().email().required(),
-      password: Joi.string(),
+      password: Joi.string().allow('').min(6),
       old_password: Joi.string().when(Joi.ref('password'), {
-        is: Joi.exist(),
+        is: Joi.string().not(''),
         then: Joi.required(),
+        otherwise: Joi.string().allow('').optional(),
       }),
       password_confirmation: Joi.string()
         .when(Joi.ref('password'), {
           is: Joi.exist(),
           then: Joi.required(),
+          otherwise: Joi.string().allow(''),
         })
         .valid(Joi.ref('password')),
     },
